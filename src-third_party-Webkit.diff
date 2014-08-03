@@ -38,7 +38,7 @@ index 4f41185..d85acc0 100644
  }
  
 diff --git a/Source/platform/fonts/mac/ComplexTextControllerCoreText.mm b/Source/platform/fonts/mac/ComplexTextControllerCoreText.mm
-index 86bc893..d9fac9c 100644
+index 86bc893..7e33d89 100644
 --- a/Source/platform/fonts/mac/ComplexTextControllerCoreText.mm
 +++ b/Source/platform/fonts/mac/ComplexTextControllerCoreText.mm
 @@ -32,12 +32,13 @@
@@ -56,6 +56,15 @@ index 86bc893..d9fac9c 100644
  
  @interface WebCascadeList : NSArray {
      @private
+@@ -214,7 +215,7 @@ void ComplexTextController::collectComplexTextRunsForCharacters(const UChar* cp,
+ 
+     RetainPtr<CTLineRef> line;
+ 
+-    if (!m_mayUseNaturalWritingDirection || m_run.directionalOverride()) {
++    if (!m_mayUseNaturalWritingDirection || m_run.directionalOverride() || true) {
+         static const void* optionKeys[] = { kCTTypesetterOptionForcedEmbeddingLevel };
+         const short ltrForcedEmbeddingLevelValue = 0;
+         const short rtlForcedEmbeddingLevelValue = 1;
 @@ -236,7 +237,7 @@ void ComplexTextController::collectComplexTextRunsForCharacters(const UChar* cp,
      } else {
          ProviderInfo info = { cp, length, stringAttributes.get() };
@@ -66,7 +75,7 @@ index 86bc893..d9fac9c 100644
  
      m_coreTextLines.append(line.get());
 diff --git a/Source/platform/fonts/mac/SimpleFontDataMac.mm b/Source/platform/fonts/mac/SimpleFontDataMac.mm
-index c8e4421..db203b7 100644
+index c8e4421..9336eef 100644
 --- a/Source/platform/fonts/mac/SimpleFontDataMac.mm
 +++ b/Source/platform/fonts/mac/SimpleFontDataMac.mm
 @@ -59,9 +59,9 @@ enum CGFontRenderingMode {
@@ -102,15 +111,17 @@ index c8e4421..db203b7 100644
  
      CFArrayRef runArray = CTLineGetGlyphRuns(line.get());
      CFIndex runCount = CFArrayGetCount(runArray);
-@@ -439,7 +440,7 @@ bool SimpleFontData::canRenderCombiningCharacterSequence(const UChar* characters
+@@ -439,8 +440,8 @@ bool SimpleFontData::canRenderCombiningCharacterSequence(const UChar* characters
              return false;
      }
  
 -    addResult.storedValue->value = true;
+-    return true;
 +    addResult.storedValue->value = true;*/
-     return true;
++    return false;
  }
  
+ } // namespace WebCore
 diff --git a/Source/platform/mac/KillRingMac.mm b/Source/platform/mac/KillRingMac.mm
 index 350a646..2dcf8b6 100644
 --- a/Source/platform/mac/KillRingMac.mm
